@@ -1,0 +1,25 @@
+<html>
+  <head>
+    <title>{{ title }}</title>
+    <style>
+        .alert-error {
+        padding: 8px;
+        background-color: red;
+        color: white;
+      }
+	</style>
+  </head>
+  <body>
+    {% for message in get_flashed_messages() %}
+      <div class="alert-error">Error: {{ message }}</div>
+    {% endfor %}
+    <center style="display: flex; flex-direction: row; justify-content: space-evenly;">
+      <h1 style="width: 100%;">{{ title }}</h1>
+      <form action="/logout" id="logout-form" method="post">
+      <button id="logout-btn">Logout</button>
+    </form>
+    </center>
+    <hr>
+    {% block content %}{% endblock %}
+  </body>
+</html>

@@ -1,0 +1,127 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+	<br>
+
+	<center style="display: flex; flex-direction: row; justify-content: space-evenly;">
+		<div style="width: 20%; border: 2px solid black;">
+			<label style="font-weight: bold;">Account #{{accountNumber}}</label>
+			<hr>
+			<div style="height: 10em;overflow: auto; margin-top:10px">
+				<table style="border-collapse: collapse; width: 97%">
+					<tbody>
+						{% set counter = [1] %}
+						{% for post in posts|reverse %}
+							{% if 'remainingAmount' not in post %}
+							<tr style="border: 2px solid black;">
+								<td style="border-right: 2px solid black;">{{counter|length}}</td>
+								<td style="border-right: 2px solid black;">${{post.transactionAmount}}</td>
+							</tr>
+							{% set __ = counter.append(1) %}
+							{% endif %}
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<form action="/submit" id="textform" method="post" style="width: 60%;">
+			<textarea name="transactionMessage" rows="4" cols="50" placeholder="Write a message for your transaction transfer..."></textarea>
+			<br>
+			<input type="text" name="transactionAmount" placeholder="$ Amount">
+			<input type="submit" value="Transfer">
+		</form>
+		<div style="width: 20%;">
+			<label style="font-weight: bold; font-size: 1.5em;">IRS Remaining: ${{remainingAmount}}</label>
+			<form action="/refresh_remaining_amount" id="update-remaining-amount" method="post">
+				<br>
+				<input type="submit" value="Refresh">
+			</form>
+		</div>
+	</center>
+
+	<br>
+
+	<div style="margin: 20px;">
+
+    {% for post in posts %}
+		{% if 'remainingAmount' not in post %}
+		<div class="post_box">
+		   <div class="post_box-header">
+			  <div style="background: rgb(0, 97, 146) none repeat scroll 0% 0%; box-shadow: rgb(0, 97, 146) 0px 0px 0px 2px;" class="post_box-avatar">{{post.transactionAmount[0]}}</div>
+			  <div class="name-header">{{post.transactionAmount}}</div>
+			  <div class="post_box-subtitle"> Posted at <i>{{readable_time(post.timestamp)}}</i></div>
+		   </div>
+		   <div>
+			  <div class="post_box-body">
+				 <p>{{post.transactionMessage}}</p>
+			  </div>
+		   </div>
+		</div>
+		{% endif %}
+	{% endfor %}
+
+	<style>
+		.post_box {
+		    background: #fff;
+		    padding: 12px 0px 0px 12px;
+		    margin-top: 0px;
+		    margin-bottom: 8px;
+		    border-top: 1px solid #f0f0f0;
+		}
+
+		.post_box-header {
+		    padding-bottom: 12px;
+		}
+
+		.post_box-avatar {
+		    width: 38px;
+		    height: 38px;
+		    border-radius: 50%;
+		    display: flex;
+		    justify-content: center;
+		    align-items: center;
+		    color: white;
+		    font-size: 22px;
+		    float: left;
+		    margin-right: 16px;
+		    border: 1px solid #fff;
+		    box-shadow: 0px 0px 0px 2px #f00;
+		}
+
+		.post_box-avatar::after {
+		    content:"";
+		    display:block;
+		}
+
+		.post_box-name {
+		    font-weight: bold;
+		}
+
+		.post_box-subtitle {
+		    color: #777;
+		}
+
+		.post_box-body {
+		    margin-top: 16px;
+		    margin-bottom: 8px;
+		}
+
+		.post_box-options {
+		    float: right;
+		}
+		.option-btn {
+		    background: #f8f8f8;
+		    border: none;
+		    color: #2c3e50;
+		    padding: 7px;
+		    cursor: pointer;
+		    font-size: 14px;
+		    margin-left: 2px;
+		    margin-right: 2px;
+		    outline: none;
+		    height: 42px;
+		}
+	</style>
+    </div>
+{% endblock %}

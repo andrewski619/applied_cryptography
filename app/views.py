@@ -10,6 +10,7 @@ from app import app
 # such nodes as well.
 CONNECTED_NODE_ADDRESS = "http://127.0.0.1:8000"
 LOGGED_IN = False
+USER = ""
 UPDATE_IRS = None
 
 posts = []
@@ -60,6 +61,7 @@ def index():
                            accountNumber=account_number,
                            node_address=CONNECTED_NODE_ADDRESS,
                            remainingAmount=remaining_amount,
+                           user=USER,
                            readable_time=timestamp_to_string)
 
 
@@ -148,15 +150,18 @@ def login():
     Endpoint to login to the blockchain application.
     """
     global CONNECTED_NODE_ADDRESS
+    global USER
     global LOGGED_IN
     username = request.form["username"]
     password = request.form["password"]
 
-    if str(username).lower() == 'bob':
+    if str(username).lower() == 'bob' and str(password) == 'password1':
         CONNECTED_NODE_ADDRESS = "http://127.0.0.1:8001"
+        USER = username
         LOGGED_IN = True
-    elif str(username).lower() == 'smith':
+    elif str(username).lower() == 'smith' and str(password) == 'password2':
         CONNECTED_NODE_ADDRESS = "http://127.0.0.1:8002"
+        USER = username
         LOGGED_IN = True
 
     if CONNECTED_NODE_ADDRESS == "http://127.0.0.1:8000":
@@ -171,10 +176,12 @@ def logout():
     Endpoint to login to the blockchain application.
     """
     global CONNECTED_NODE_ADDRESS
+    global USER
     global LOGGED_IN
 
     LOGGED_IN = False
     CONNECTED_NODE_ADDRESS = "http://127.0.0.1:8000"
+    USER = ""
     session.pop('_flashes', None)
     return redirect('/')
 

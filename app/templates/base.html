@@ -8,12 +8,14 @@
         color: white;
       }
 	</style>
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
   </head>
   <body>
     {% for message in get_flashed_messages() %}
       <div class="alert-error">Error: {{ message }}</div>
     {% endfor %}
     <center style="display: flex; flex-direction: row; justify-content: space-evenly;">
+      <label style="font-weight: bold; font-size: 1.5em;"><i class='fas fa-user-alt' style='font-size:36px'></i>{{ user }}</label>
       <h1 style="width: 100%;">{{ title }}</h1>
       <form action="/logout" id="logout-form" method="post">
       <button id="logout-btn">Logout</button>

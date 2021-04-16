@@ -11,7 +11,9 @@ from app import app
 CONNECTED_NODE_ADDRESS = "http://127.0.0.1:8000"
 LOGGED_IN = False
 USER = ""
-UPDATE_IRS = None
+UPDATE_IRS_DAY = None
+UPDATE_IRS_HOUR = None
+UPDATE_IRS_MINUTES = None
 
 posts = []
 
@@ -112,16 +114,20 @@ def refresh_remaining_amount():
     """
     Endpoint to update remaining amount via our application.
     """
-    global UPDATE_IRS
+    global UPDATE_IRS_DAY
+    global UPDATE_IRS_HOUR
+    global UPDATE_IRS_MINUTES
     x = datetime.datetime.today()
-    if UPDATE_IRS is None:
-        UPDATE_IRS = x.minute
-    y = x.replace(day=x.day, hour=x.hour, minute=UPDATE_IRS, second=0, microsecond=0) + datetime.timedelta(minutes=2)
+    if UPDATE_IRS_MINUTES is None:
+        UPDATE_IRS_DAY = x.day
+        UPDATE_IRS_HOUR = x.hour
+        UPDATE_IRS_MINUTES = x.minute
+    y = x.replace(day=UPDATE_IRS_DAY, hour=UPDATE_IRS_HOUR, minute=UPDATE_IRS_MINUTES, second=0, microsecond=0) + datetime.timedelta(minutes=2)
     delta_t = y - x
     secs = delta_t.total_seconds()
 
-    if secs < 0 and UPDATE_IRS is not None:
-        UPDATE_IRS = None
+    if secs < 0 and UPDATE_IRS_MINUTES is not None:
+        UPDATE_IRS_MINUTES = None
         last_remaining_amount = 0
         for post in posts:
             if 'remainingAmount' in post and post['remainingAmount'] is not None:
